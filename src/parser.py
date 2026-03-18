@@ -3,8 +3,14 @@ from pathlib import Path
 from typing import Any
 
 NS = {
-    "wp": "http://wordpress.org/export/1.0/",
+    "wp": "http://wordpress.org/export/1.2/",
     "content": "http://purl.org/rss/1.0/modules/content/",
+    "excerpt": "http://wordpress.org/export/1.2/excerpt/",
+}
+
+WP_NS_ALIASES = {
+    "http://wordpress.org/export/1.0/": "wp",
+    "http://wordpress.org/export/1.2/": "wp",
 }
 
 
@@ -68,4 +74,7 @@ def get_text(element: ET.Element, tag: str | None, ns: dict | None = None) -> st
                     return el.text.strip() if el.text else None
     for el in element.iter(tag):
         return el.text.strip() if el.text else None
+    for el in element.iter():
+        if el.tag.endswith(f"}}{tag}"):
+            return el.text.strip() if el.text else None
     return None
